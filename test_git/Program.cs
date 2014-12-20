@@ -11,5 +11,10 @@ namespace test_git
         static void Main(string[] args)
         {
         }
+
+        static void doConsole()
+        {
+
+        }
     }
 }
