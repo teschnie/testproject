@@ -35,5 +35,21 @@ Die Git zugrunde liegenden (plumbing-) Werkzeuge, wie \textit{git ls-files} und 
 \item Ein optionales Prefix \verb|"!"| negiert das pattern; Jedes passende file welches von einem vorangegangenen pattern ausgeschlossen wurde wird erneut eingeschlossen. Es ist nicht möglich, ein file erneut einzuschliessen, wenn ein übergeordnetes directory dieses files ausgeschlossen ist. Git listet aus performance-Gründen keine ausgeschlossenen Verzeichnisse auf, daher haben pattern aus befindlichen files keine Wirkung, egal wo sie definiert wurden. Platziere einen backslash \verb|("\")| VOR dem ersten Ausrufezeichen für patterns welche mit einem wörtlichen Ausrufezeichen beginnen. Beispiel: \verb|\!important!.txt|
 \item Wenn das pattern mit einem slash endet, ist es aufgrund der folgenden Beschreibung entfernt, es würde jedoch einzig eine Übereinstimmung mit einem Verzeichnis finden. In anderen Worten \verb|foo/| wird mit einem Verzeichnis \verb|foo| und dessen untergeordneten Pfaden übereinstimmen, jedoch nicht mit einem regulären file oder einem symbolischen link \verb|foo| (Das ist konsistent mit der Art wie pathspec generell in Git funktioniert).
 \item Wenn das pattern keinen slash enthält, behandelt es Git wie ein shell glob pattern und prüft eine Übereinstimmung mit dem Pfadnamen welcher relativ zum Ort des \textit{.gitignore}-file steht (relativ zum toplevel des Arbeitsverzeichnisses wenn nicht von einem \textit{.gitignore}-file).
-\item 
+\item ?
+\item Ein führender slash bezeichnet den Beginn eines Pfadnamens. Zum Beispiel ein \verb|/*.c| bezeichnet \verb|cat-file.c|, jedoch nicht \verb|mozilla-sha1/sha1.c|.
 \end{itemize}
+
+Zwei fortlaufende sterne \verb|**| in patterns bezeichnend für den vollen Pfadnamen haben eine spezielle Bedeutung:
+\begin{itemize}
+\item Ein führender doppe-Stern gefolgt von einem slash bedeutet übereinstimmung in alle Richtungen. Zum Beispiel \verb|**/foo| bezeichnet file oder Verzeichnis \textit{foo} irgendwo, das selbe wie \textit{foo}. \verb|**/foo/bar| bezeichnet file oder Verzeichnis \textit{bar} irgendwo direkt unter dem Verzeichnis \textit{foo}.
+\item Ein folgendes \verb{\**} bezeichnet alles enthaltene. Zum Beispiel \verb|abc/**| bezeichnet alle im Verzeichnis \textit{abc} relativ zum Ort des \textit{.gitignore}-files enthaltenen Dateien mit endlicher Tiefe.
+\item Ein slash gefolgt von zwei fortlaufenden Sternen und anschliessend wieder ein slash bezeichnen keine oder mehr Verzeichnisse. Zum Beispiel, \verb|a/**/b| bezeichnet \verb|a/b|,\verb|a/x/b|,\verb|a/x/y/b| und so weiter.
+\item Andere fortlaufende Sterne werden als ungültig angenommen.
+\end{itemize}
+
+\section*{NOTES}
+Der Zweck von gitignore-files ist es sicherzustellen dass bestimmte, von Git nicht erfasste files nicht erfasst bleiben.
+
+Um nicht-committete Änderungen in einem bereits erfassten file zu ignorieren, nutze \textit{git update-index {litdd}assume-unchanged}.
+
+Um ein bereits erfasstes file nicht mehr zu erfassen, nutze \textit{git rm --cached}.
