@@ -1,0 +1,6 @@
+C:\Users\Martin Schnieper\Documents\_test_git\test_git\bin\Debug\test_git.exe.config
+C:\Users\Martin Schnieper\Documents\_test_git\test_git\bin\Debug\test_git.exe
+C:\Users\Martin Schnieper\Documents\_test_git\test_git\bin\Debug\test_git.pdb
+C:\Users\Martin Schnieper\Documents\_test_git\test_git\obj\Debug\test_git.csprojResolveAssemblyReference.cache
+C:\Users\Martin Schnieper\Documents\_test_git\test_git\obj\Debug\test_git.exe
+C:\Users\Martin Schnieper\Documents\_test_git\test_git\obj\Debug\test_git.pdb

@@ -1,0 +1,38 @@
+% translation of git-scm.com/docs/gitignore
+
+\section*{NAME}
+gitignore - Spezifiziert absichtlich nicht verfolgte Dateien zum ignorieren
+
+\section*{SYNOPSIS}
+$HOME/.config/git/ignore,$GIT_DIR/info/exclude, .gitignore
+
+\section*{Beschreibung}
+Ein \textit{gitignore}-file spezifiziert absichtlich nicht verfolgte Dateien welche Git ignorieren soll. Dateien welche bereits von Git verfolgt wurden werden davon nicht betroffen. Für details siehe Hinweise unten.
+
+Jede Zeile eines \textit{gitignore}-files spezifiziert ein pattern. Wenn entschieden wird ob ein Pfad ignoriert wird, checkt git normalerweise \textit{gitignore}-patterns von mehreren Quellen mit folgendem Vorrang in absteigender Reihenfolge (innerhalb einer Stufe von Vorrang entscheidet das letztgenannte pattern):
+
+\begin{itemize}
+\item Patterns lesen von der Kommandozeile bei Kommandos welche sie unterstützen	%Übersetzung !!
+\item Patterns welche aus einem \textit{.gitignore}-file aus dem selben Verzeichnis wie der Pfad oder in einem übergeordneten Pfad gelesen, mit patterns in einem übergeordneten file (bis hoch zum toplevel des Arbeitsverzeichnisses) werden überschrieben von denen in untergeordneten files bis nach unten zum Verzeichnis welches das file enthält. Diese patterns stimmen mit dem relativen Pfad des \textit{.gitignore}-files überein. Normalerweise enthält ein Projekt solche \textit{gitignore}-files in seinem repository, welche die patterns für files welche während des build-Prozesses entstehen enthalten.
+\item Patterns welche von \textit{$GIT_DIR/info/exclude} gelesen wurden.
+\item Patterns welche aus einem von der Konfigurationsvariable \textit{core.exludesfile} spezifizierten file gelesen wurden.
+\end{itemize}
+
+In welchem fiel ein pattern platziert wird, hängt davon ab wie das pattern verwendet werden soll.
+\begin{itemize}
+\item Patterns welche Versions-kontrolliert und via clone zu anderen repositories verteilt werden sollen (z.B. files welche alle Entwickler ignoriert haben werden wollen) sollten in ein \textit{gitignore}-file gehen.
+\item Patterns welche speziell einem bestimmten repository angehören, jedoch nicht mit anderen verwandten repositories geteilt werden müssen (z.B. *.aux-files welche im repository existieren jedoch ausschliesslich zum workflow eines users gehören) sollten in das \textit{$GIT_DIR/info/exclude}-file gehen.
+\item Patterns welche ein user von Git in allen Situationen ignoriert haben will (z.B. backup oder von des users Wahl-editor generierte temporäre files) gehen generell in ein file welches von \textit{vore.excludesfiel} in des users \textit{~/.gitconfig} spezifiziert ist. Sein default-wert ist \verb|$XDG_CONFIG_HOME/git/ignore|. Wenn \verb|$XDG_CONFIG_HOME| enweder nicht gesetzt oder leer ist, wird statt dessen \verb|$HOME/.config/git/ignore| verwendet.
+\end{itemize}
+
+Die Git zugrunde liegenden (plumbing-) Werkzeuge, wie \textit{git ls-files} und \textit{git read-tree}, lesen \textit{gitignore}-patterns welche von Kommandozeilen-Optionen spezifiziert wurden oder aus Dateien, welche von Kommandozeilen-Optionen spezifiziert wurden. Higher-level Git-Tools wie \textit{git status} und \textit{git add}, nutzen patterns nutzen patterns von den oben beschriebenen Quellen.
+
+\section*{PATTERN FORMAT}
+\begin{itemize}
+\item Eine blanke Zeile entspricht keinem file, daher kann sie als separator für bessere Übersichtlichkeit dienen.
+\item Eine Zeile welche mit \# startet liefert einen Kommentar. Platziere einen backslash \verb|("\")| vor dem ersten hash-tag für patterns welche mit einem hash-tag beginnen.
+\item Leerzeichen am Zeilenende werden ignoriert, ausser ihnen geht ein backslash \verb|("\")| voraus.
+\item Ein optionales Prefix \verb|"!"| negiert das pattern; Jedes passende file welches von einem vorangegangenen pattern ausgeschlossen wurde wird erneut eingeschlossen. Es ist nicht möglich, ein file erneut einzuschliessen, wenn ein übergeordnetes directory dieses files ausgeschlossen ist. Git listet aus performance-Gründen keine ausgeschlossenen Verzeichnisse auf, daher haben pattern aus befindlichen files keine Wirkung, egal wo sie definiert wurden. Platziere einen backslash \verb|("\")| VOR dem ersten Ausrufezeichen für patterns welche mit einem wörtlichen Ausrufezeichen beginnen. Beispiel: \verb|\!important!.txt|
+\item Wenn das pattern mit einem slash endet, ist es aufgrund der folgenden Beschreibung entfernt, es würde jedoch einzig eine Übereinstimmung mit einem Verzeichnis finden. In anderen Worten \verb|foo/| wird mit einem Verzeichnis \verb|foo| und dessen untergeordneten Pfaden übereinstimmen, jedoch nicht mit einem regulären file oder einem symbolischen link \verb|foo| (Das ist konsistent mit der Art wie pathspec generell in Git funktioniert).
+\item 
+\end{itemize}
